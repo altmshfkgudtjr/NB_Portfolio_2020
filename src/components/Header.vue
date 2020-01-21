@@ -91,6 +91,7 @@
 		padding: 45px 5%;
     	background-color: white;
     	box-sizing: border-box;
+    	z-index: 10;
 	}
 	.logo_box {
 		float: left;

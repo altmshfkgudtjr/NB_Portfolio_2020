@@ -2,6 +2,7 @@
   <div id="app">
     <loading></loading>
     <headerDiv v-show="top"></headerDiv>
+    <Home id="home" v-show="top"></Home>
   </div>
 </template>
 
@@ -9,6 +10,7 @@
 <script>
 	import loading from "./components/Loading.vue"
 	import headerDiv from "./components/header.vue"
+	import Home from "./components/Home.vue"
 	import Vue from "vue"
 	export const eventBus = new Vue();
 	let IsHeader;
@@ -16,7 +18,8 @@
 		name: 'app',
 		components: {
 			'loading': loading,
-			'headerDiv': headerDiv
+			'headerDiv': headerDiv,
+			'Home': Home
 		},
 		data() {
 			return {
@@ -44,6 +47,23 @@
 	font-family: "poppin", 'sans-serif';
 }
 
+/*Drag Color Changed*/
+::selection {
+    background:#adadad;
+    color: #FFF;
+    text-shadow: none;
+}
+::-moz-selection {
+    background:#adadad;
+    color: #FFF;
+    text-shadow: none;
+}
+::-webkit-selection {
+    background:#adadad;
+    color: #FFF;
+    text-shadow: none;
+}
+
 .noselect {
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -53,11 +73,14 @@
 	user-selecti: none;
 }
 
-html, body {
+html, body, #app {
 	height: 100%;
 	background-color: white;
 	padding: 0;
 	margin: 0;
+}
+html {
+	scroll-behavior: smooth;
 }
 body {
 	position: relative;

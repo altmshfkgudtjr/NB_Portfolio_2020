@@ -26,7 +26,7 @@
 	      </div>
 	      <div class="gear four large">
 	        <div class="gear-inner">
-	          <div class="bar"></div>
+	          <div class="bar"></div>`
 	          <div class="bar"></div>
 	          <div class="bar"></div>
 	          <div class="bar"></div>

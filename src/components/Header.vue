@@ -6,11 +6,11 @@
 			<a href="/" v-show="logo[2]" class="logo_box"><img src="../assets/images/NB_black.png" class="logo"></a>
 			<a href="/" v-show="logo[3]" class="logo_box"><img src="../assets/images/NB_white.png" class="logo"></a>
 			<div class="menu">
-				<div class="menu_item hover-shadow">
+				<div class="menu_item hover-shadow" v-on:click="Go_Home">
 					HOME
-				</div><div class="menu_item hover-shadow">
+				</div><div class="menu_item hover-shadow" v-on:click="Go_Work">
 					WORK
-				</div><div class="menu_item hover-shadow">
+				</div><div class="menu_item hover-shadow" v-on:click="Go_Contact">
 					CONTACT
 				</div>
 			</div>
@@ -68,6 +68,17 @@
 					smallDisplay = true;
 					eventBus.$emit("logoSizeChange");
 				}
+			},
+			Go_Home: ()=>{
+				let height = document.getElementById('home_first').offsetTop;
+				window.scrollTo(0, height);
+			},
+			Go_Work: ()=>{
+				let height = document.getElementById('home_fourth').offsetTop;
+				window.scrollTo(0, height);
+			},
+			Go_Contact: ()=>{
+
 			}
 		}
 	}
@@ -122,7 +133,7 @@
 	}
 	@media screen and (max-width: 500px) {
 		.header {
-			height: 130px;
+			height: 70px;
 			padding: 15px 5%;
 		}
 		.logo_box {

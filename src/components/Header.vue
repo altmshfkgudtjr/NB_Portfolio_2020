@@ -1,6 +1,6 @@
 <template>
 	<transition name="top">
-		<div class="header">
+		<div id="header" class="header">
 			<a href="/" v-show="logo[0]" class="logo_box"><img src="../assets/images/NBlog_black.png" class="logo"></a>
 			<a href="/" v-show="logo[1]" class="logo_box"><img src="../assets/images/NBlog_white.png" class="logo"></a>
 			<a href="/" v-show="logo[2]" class="logo_box"><img src="../assets/images/NB_black.png" class="logo"></a>
@@ -36,11 +36,24 @@
 				for (let i = 0; i < this.logo.length; i++) {
 					if (this.logo[i] == true) {
 						now = i;
-						this.logo[i] = !this.logo[i];
+						this.logo = this.logo.map((el, index) =>
+							index === i ? !el : el
+						)
 					}
 				}
-				if (now < 2) this.logo[now + 2] = !this.logo[now + 2];
-				else this.logo[now - 2] = !this.logo[now - 2];
+				if (now < 2) {
+					//this.logo[now + 2] = !this.logo[now + 2];
+					this.logo = this.logo.map((el, index) =>
+						index === now + 2 ? !el : el
+					)
+				}
+				else {
+					//this.logo[now - 2] = !this.logo[now - 2];
+					this.logo = this.logo.map((el, index) =>
+						index === now + 2 ? !el : el
+					)
+				}
+				smallDisplay = !smallDisplay;
 			});
 			// Event Call : eventBus.$emit("logoColorChange");
 			eventBus.$on("logoColorChange", () => {
@@ -48,11 +61,22 @@
 				for (let i = 0; i < this.logo.length; i++) {
 					if (this.logo[i] == true) {
 						now = i;
-						this.logo[i] = !this.logo[i];
+						this.logo = this.logo.map((el, index) => index === i ? !el : el)
 					}
 				}
-				if (now%2==0) this.logo[now + 1] = !this.logo[now + 1];
-				else this.log[now - 1] = !this.logo[now + 1];
+				// image change
+				if (now%2==0) {
+					this.logo = this.logo.map((el, index) => index === now + 1 ? !el : el)
+				}
+				else {
+					this.logo = this.logo.map((el, index) => index === now - 1 ? !el : el)
+				}
+				// css change
+				if (document.getElementById('header').classList.contains('black_header')){
+					document.getElementById('header').classList.remove('black_header');
+				} else {
+					document.getElementById('header').classList.add('black_header');
+				}
 			});
 			window.addEventListener('resize', this.LogoChanging)
 			this.LogoChanging();
@@ -61,11 +85,9 @@
 			// Screen Width Standard == 500px
 			LogoChanging() {
 				if (screen.width >= 500 && smallDisplay) {
-					smallDisplay = false;
 					eventBus.$emit("logoSizeChange");
 				}
 				if (screen.width < 500 && !smallDisplay) {
-					smallDisplay = true;
 					eventBus.$emit("logoSizeChange");
 				}
 			},
@@ -78,7 +100,8 @@
 				window.scrollTo(0, height);
 			},
 			Go_Contact: ()=>{
-
+				let height = document.getElementById('home_sixth').offsetTop;
+				window.scrollTo(0, height);
 			}
 		}
 	}
@@ -103,6 +126,11 @@
     	background-color: white;
     	box-sizing: border-box;
     	z-index: 10;
+    	transition: .1s ease-in-out;
+	}
+	.black_header {
+		background-color: black !important;
+		color: white !important;
 	}
 	.logo_box {
 		float: left;

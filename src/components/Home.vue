@@ -78,7 +78,7 @@
 							NoSQL(MongoDB)</div>
 					</div>
 				</div>
-				<img src="../assets/images/picture.jpg" class="skill_img">
+				<img src="../assets/images/picture.jpg" class="skill_img" alt="Copyright 2020. NB">
 			</div>
 			<div id="home_fourth" class="home">
 				<div id="project_box" class="project_box">
@@ -194,7 +194,7 @@
 					</div>
 				</div>
 				<div class="copyright">
-					<p>© COPYRIGHTS <span class="NB">NB</span>. ALL RIGHTS RESERVED.</p>
+					<p>© 2020. <span class="NB">NB</span> ALL RIGHTS RESERVED.</p>
 					<p>This Website Designed by <span class="NB">NB</span>.</p>
 				</div>
 			</div>
@@ -673,7 +673,7 @@
 		position:relative;
 		margin-left: 3rem;
 		font-size: 1.5rem;
-		line-height: 1.2;
+		line-height: 1.4;
 		color: #838383;
 	}
 	@media screen and (max-width: 500px) {
@@ -694,6 +694,9 @@
 		top: 3vw;
 		outline: 10px solid black;
     	padding: 10px;
+	}
+	.skill_img:hover {
+
 	}
 	@media screen and (orientation:portrait) {
 		.skill_img {
@@ -831,6 +834,7 @@
 		padding-left: 15%;
 		box-sizing: border-box;
 		font-weight: bold;
+		text-transform: uppercase;
 	}
 	.NB {
 		color: #adadad;
@@ -855,6 +859,11 @@
 		}
 		.contact_info_item {
 			font-size: 1em;
+		}
+		.copyright {
+			padding-left: 0;
+			width: 100%;
+			text-align: center;
 		}
 	}
 </style>

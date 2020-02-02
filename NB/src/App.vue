@@ -12,6 +12,8 @@
 	import headerDiv from "./components/header.vue"
 	import Home from "./components/Home.vue"
 	import Vue from "vue"
+	import axios from 'axios'
+
 	export const eventBus = new Vue();
 	let IsHeader;
 	export default {

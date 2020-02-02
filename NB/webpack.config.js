@@ -4,9 +4,23 @@ var webpack = require('webpack')
 module.exports = {
   entry: './src/main.js',
   output: {
-    path: path.resolve(__dirname, './dist'),
+    path: path.resolve(__dirname, "../Backend/public/dist/"),
     publicPath: '/dist/',
     filename: 'build.js'
+  },
+  devServer: {
+    //historyApiFallback: true,
+    //noInfo: true,
+    //overlay: true
+    proxy: { // proxyTable 설정 
+      '/api': { 
+        target: 'http://localhost:3000/routes',
+        changeOrigin: true,
+        pathRewrite:{ 
+          "^/api" : '' 
+        } 
+      } 
+    }
   },
   module: {
     rules: [
@@ -81,11 +95,6 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js'
     },
     extensions: ['*', '.js', '.vue', '.json']
-  },
-  devServer: {
-    historyApiFallback: true,
-    noInfo: true,
-    overlay: true
   },
   performance: {
     hints: false

@@ -1,6 +1,7 @@
 .DS_Store
-node_modules/
-dist/
+NB/node_modules/
+backend/node_modules/
+backend/public/dist/
 npm-debug.log
 yarn-error.log
 
@@ -10,3 +11,6 @@ yarn-error.log
 *.ntvs*
 *.njsproj
 *.sln
+
+# database info
+backend/database.js

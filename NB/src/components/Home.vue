@@ -83,51 +83,16 @@
 			<div id="home_fourth" class="home">
 				<div id="project_box" class="project_box">
 					<div class="box_title">PORTFOLIO & EXPERIENCE</div>
-					<div class="project_item" data-aos="zoom-in" data-aos-duration="1000">
+					<div class="project_item" data-aos="zoom-in" data-aos-duration="1000" v-for="project in projects" :key="projects.post_id">
 						<div class="project_img_box">
 							<div class="project_img"></div>
 						</div>
-						<div class="project_title">테스트 제목입니다.</div>
-						<div class="project_subtitle">SOOJLE FRONT-END & CRALWER DEVELOPER</div>
-					</div>
-					<div class="project_item" data-aos="zoom-in" data-aos-duration="1000">
-						<div class="project_img_box">
-							<div class="project_img"></div>
-						</div>
-						<div class="project_title">테스트 제목입니다.</div>
-						<div class="project_subtitle">SOOJLE FRONT-END & CRALWER DEVELOPER</div>
-					</div>
-					<div class="project_item" data-aos="zoom-in" data-aos-duration="1000">
-						<div class="project_img_box">
-							<div class="project_img"></div>
-						</div>
-						<div class="project_title">테스트 제목입니다.</div>
-						<div class="project_subtitle">SOOJLE FRONT-END & CRALWER DEVELOPER</div>
-					</div>
-					<div class="project_item" data-aos="zoom-in" data-aos-duration="1000">
-						<div class="project_img_box">
-							<div class="project_img"></div>
-						</div>
-						<div class="project_title">테스트 제목입니다.</div>
-						<div class="project_subtitle">SOOJLE FRONT-END & CRALWER DEVELOPER</div>
-					</div>
-					<div class="project_item" data-aos="zoom-in" data-aos-duration="1000">
-						<div class="project_img_box">
-							<div class="project_img"></div>
-						</div>
-						<div class="project_title">테스트 제목입니다.</div>
-						<div class="project_subtitle">SOOJLE FRONT-END & CRALWER DEVELOPER</div>
-					</div>
-					<div class="project_item" data-aos="zoom-in" data-aos-duration="1000">
-						<div class="project_img_box">
-							<div class="project_img"></div>
-						</div>
-						<div class="project_title">테스트 제목입니다.</div>
-						<div class="project_subtitle">SOOJLE FRONT-END & CRALWER DEVELOPER</div>
+						<div class="project_title">{{ project.title }}</div>
+						<div class="project_subtitle">{{ project.subtitle }}</div>
 					</div>
 				</div>
 				<div class="view_more_posts">
-					<div class="view_more_posts_btn" v-on:click="More_Posts">
+					<div class="view_more_posts_btn" v-on:click="Get_projects">
 						<span>VIEW</span>
 						<div class="btn_line"></div>
 						<span>MORE POSTS</span>
@@ -136,33 +101,9 @@
 			</div>
 			<div id="home_fifth" class="home">
 				<div class="awards_title noselect">AWARDS</div>
-				<div class="award_item"><i class="fas fa-trophy"></i>
-					2rd Sejong Uni. Computer Engineering Academic Seminar
-					<div class="award_date">December, 13 2019</div>
-				</div>
-				<div class="award_item"><i class="fas fa-trophy"></i>
-					4th Sejong University Campus Town Revitalization Idea Competition
-					<div class="award_date">December, 11 2019</div>
-				</div>
-				<div class="award_item"><i class="fas fa-trophy"></i>
-					2nd class Sejong Algorithm Coding Challenge
-					<div class="award_date">December, 4 2019</div>
-				</div>
-				<div class="award_item"><i class="fas fa-trophy"></i>
-					3rd 8th Creative Design Contest
-					<div class="award_date">December, 4 2019</div>
-				</div>
-				<div class="award_item"><i class="fas fa-trophy"></i>
-					4th Sejong Entrepreneurship Idea Festival
-					<div class="award_date">November, 18 2019</div>
-				</div>
-				<div class="award_item"><i class="fas fa-trophy"></i>
-					1st 2019 Sejong AI Idea Contest
-					<div class="award_date">October, 11 2019</div>
-				</div>
-				<div class="award_item"><i class="fas fa-trophy"></i>
-					1st Sejong Software Convergence Contest
-					<div class="award_date">September, 30 2019</div>
+				<div class="award_item" v-for="award in awards" :key="awards.award_id"><i class="fas fa-trophy"></i>
+					{{ award.name }}
+					<div class="award_date">{{ award.date }}</div>
 				</div>
 			</div>
 			<div id="home_sixth" class="home">
@@ -203,13 +144,16 @@
 </template>
 
 <script>
+	import axios from 'axios'
 	import Vue from "vue"
 	import { eventBus } from "../App.vue"
 	var logo_black = true;
 	export default {
 		data() {
 			return {
-				showing: true
+				showing: true,
+				awards: [],
+				projects: []
 			}
 		},
 		mounted() {
@@ -229,7 +173,9 @@
 					}, 1000);
 				}
 			}, 5000);
-			window.addEventListener('scroll', this.Logo_color)
+			window.addEventListener('scroll', this.Logo_color);
+			this.Get_awards();
+			this.Get_projects();
 		},
 		methods: {
 			Go_second: ()=> {
@@ -255,9 +201,6 @@
 					logo_black = !logo_black;
 				}
 			},
-			More_Posts: () => {
-				console.log("Give Me a Post!");
-			},
 			Go_Home: () => {
 				window.open('https://www.google.co.kr/maps/place/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C+%EA%B4%91%EC%A7%84%EA%B5%AC/@37.5463043,127.068361,14z/data=!3m1!4b1!4m5!3m4!1s0x357ca528f81c1909:0xa8f1a5f74974ff31!8m2!3d37.5384843!4d127.0822938?hl=ko', '_blank');
 			},
@@ -275,6 +218,21 @@
 			},
 			Go_instagram: ()=> {
 				window.open('https://www.instagram.com/brother_rock999/', '_blank');
+			},
+			Get_awards: function() {
+				axios.get('http://localhost:3000/awards').then((response)=>{
+  					if (response.status === 200)
+        				for (let award in response.data)
+        					this.awards.push(response.data[award]);
+    			});
+			},
+			Get_projects: function() {
+				let pj_len = document.getElementsByClassName("project_item").length;
+				axios.get('http://localhost:3000/projects/'+pj_len).then((response)=>{
+  					if (response.status === 200)
+        				for (let project in response.data)
+        					this.projects.push(response.data[project]);
+    			});
 			}
 		}
 	};

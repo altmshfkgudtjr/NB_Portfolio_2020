@@ -3,6 +3,7 @@
     <loading></loading>
     <headerDiv v-show="top"></headerDiv>
     <Home id="home" v-show="top"></Home>
+    <Login v-show="top_login"></Login>
   </div>
 </template>
 
@@ -11,6 +12,7 @@
 	import loading from "./components/Loading.vue"
 	import headerDiv from "./components/header.vue"
 	import Home from "./components/Home.vue"
+	import Login from "./components/Login.vue"
 	import Vue from "vue"
 	import axios from 'axios'
 
@@ -21,16 +23,26 @@
 		components: {
 			'loading': loading,
 			'headerDiv': headerDiv,
-			'Home': Home
+			'Home': Home,
+			"Login": Login
 		},
 		data() {
 			return {
-				top: true
+				top: true,
+				top_login: false
 			};
 		},
 		created() {
 			this.top = false;
 			eventBus.$on("loadingDone", () => {
+				this.top = true;
+			});
+			eventBus.$on("GoLogin", () => {
+				this.top = false;
+				this.top_login = true;
+			});
+			eventBus.$on("ByeLogin", () => {
+				this.top_login = false;
 				this.top = true;
 			});
 		}

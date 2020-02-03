@@ -41,6 +41,7 @@
 						)
 					}
 				}
+				console.log(now);
 				if (now < 2) {
 					//this.logo[now + 2] = !this.logo[now + 2];
 					this.logo = this.logo.map((el, index) =>
@@ -50,7 +51,7 @@
 				else {
 					//this.logo[now - 2] = !this.logo[now - 2];
 					this.logo = this.logo.map((el, index) =>
-						index === now + 2 ? !el : el
+						index === now - 2 ? !el : el
 					)
 				}
 				smallDisplay = !smallDisplay;

@@ -136,7 +136,7 @@
 				</div>
 				<div class="copyright">
 					<p>© 2020. <span class="NB">NB</span> ALL RIGHTS RESERVED.</p>
-					<p>This Website Designed by <span class="NB">NB</span>.</p>
+					<p>This Website Designed by <span class="NB NB_btn" v-on:click="Go_Login">NB</span>.</p>
 				</div>
 			</div>
 		</div>
@@ -233,11 +233,12 @@
         				for (let project in response.data)
         					this.projects.push(response.data[project]);
     			});
+			},
+			Go_Login: ()=> {
+				eventBus.$emit('GoLogin');
 			}
 		}
 	};
-
-
 </script>
 
 <style scoped lang="scss">
@@ -479,6 +480,8 @@
 		height: auto;
 		margin-top: 50px;
 		padding-bottom: 120px;
+		transition: .1s ease-in-out;
+		-webkit-transition: .1s ease-in-out;
 	}
 	@media screen and (max-width: 500px) {
 		#home_fourth {
@@ -765,7 +768,7 @@
 		position: relative;
 		display: inline-block;
 		width: auto;
-		font-size: 1.5rem;
+		font-size: 1.4rem;
 		line-height: 2;
 		transition: .4s cubic-bezier(0.65, 0, 0.17, 0.98);;
 		margin-bottom: 20px;
@@ -796,6 +799,13 @@
 	}
 	.NB {
 		color: #adadad;
+	}
+	.NB_btn {
+		cursor: pointer;
+		transition: .2s ease-in-out;
+	}
+	.NB_btn:hover {
+		color: black;
 	}
 	@media screen and (max-width: 500px) {
 		#home_sixth {

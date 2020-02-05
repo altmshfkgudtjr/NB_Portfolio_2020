@@ -12,9 +12,9 @@ var connection = mysql.createConnection(dbconfig);
 
 // 라우터 연결
 var indexRouter = require('./routes/index');
-var test = require('./routes/test');
 var projects = require('./routes/projects');
 var awards = require('./routes/awards');
+var user = require('./routes/user');
 
 
 // express 연결
@@ -38,12 +38,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 /* API 요청 URL======================================= */
 // 메인페이지 기본 실행 API
 app.use('/', indexRouter);
-// TEST API
-app.use('/test',test);
 // Projects 관련 API
 app.use('/projects', projects);
 // Awards 관련 API
 app.use('/awards', awards);
+// User 관련 API
+app.use('/user', user);
 
 
 

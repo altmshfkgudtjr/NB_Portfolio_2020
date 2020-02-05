@@ -41,7 +41,6 @@
 						)
 					}
 				}
-				console.log(now);
 				if (now < 2) {
 					//this.logo[now + 2] = !this.logo[now + 2];
 					this.logo = this.logo.map((el, index) =>

@@ -12,4 +12,12 @@ router.get('/', function(req, res){
   });
 });
 
+router.post('/delete', function(req, res) {
+	let award_name = req.body.name;
+	connection.query('DELETE FROM awards WHERE name = "'+award_name+'"', function(err, rows) {
+		if(err) throw err;
+		res.send('success');
+	});
+});
+
 module.exports = router;

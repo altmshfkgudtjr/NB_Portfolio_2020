@@ -4,6 +4,7 @@
     <headerDiv v-show="top"></headerDiv>
     <Home id="home" v-show="top"></Home>
     <Login v-show="top_login"></Login>
+    <Admin v-show="top_admin"></Admin>
   </div>
 </template>
 
@@ -13,6 +14,7 @@
 	import headerDiv from "./components/header.vue"
 	import Home from "./components/Home.vue"
 	import Login from "./components/Login.vue"
+	import Admin from "./components/Admin.vue"
 	import Vue from "vue"
 	import axios from 'axios'
 
@@ -24,12 +26,14 @@
 			'loading': loading,
 			'headerDiv': headerDiv,
 			'Home': Home,
-			"Login": Login
+			"Login": Login,
+			"Admin": Admin
 		},
 		data() {
 			return {
 				top: true,
-				top_login: false
+				top_login: false,
+				top_admin: false
 			};
 		},
 		created() {
@@ -44,6 +48,10 @@
 			eventBus.$on("ByeLogin", () => {
 				this.top_login = false;
 				this.top = true;
+			});
+			eventBus.$on("SuccessLogin", () => {
+				this.top_login = false;
+				this.top_admin = true;
 			});
 		}
 	}

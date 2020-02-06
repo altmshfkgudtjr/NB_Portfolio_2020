@@ -5,6 +5,7 @@
     <Home id="home" v-show="top"></Home>
     <Login v-show="top_login"></Login>
     <Admin v-show="top_admin"></Admin>
+    <Post v-show="top_modal"></Post>
   </div>
 </template>
 
@@ -15,6 +16,7 @@
 	import Home from "./components/Home.vue"
 	import Login from "./components/Login.vue"
 	import Admin from "./components/Admin.vue"
+	import Post from "./components/Post.vue"
 	import Vue from "vue"
 	import axios from 'axios'
 
@@ -27,13 +29,15 @@
 			'headerDiv': headerDiv,
 			'Home': Home,
 			"Login": Login,
-			"Admin": Admin
+			"Admin": Admin,
+			"Post": Post
 		},
 		data() {
 			return {
 				top: true,
 				top_login: false,
-				top_admin: false
+				top_admin: false,
+				top_modal: false
 			};
 		},
 		created() {
@@ -53,6 +57,12 @@
 				this.top_login = false;
 				this.top_admin = true;
 			});
+			eventBus.$on("PostOn", (targetNum) => {
+				this.top_modal = true;
+			});
+			eventBus.$on("PostClose", () => {
+				this.top_modal = false;
+			})
 		}
 	}
 </script>
@@ -100,6 +110,9 @@ html, body, #app {
 	background-color: white;
 	padding: 0;
 	margin: 0;
+}
+body::-webkit-scrollbar {
+    display: none;
 }
 html {
 	scroll-behavior: smooth;

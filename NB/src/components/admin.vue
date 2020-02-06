@@ -22,14 +22,16 @@
 					</div><div class="info_wrap">
 						<input id="img_file" type="file" accept="img/*" required class="img_file">
 						<div class="subtitle noselect">title</div>
-						<input type="text" class="info_input">
+						<input type="text" class="info_input projectTitle">
 						<div class="subtitle noselect">subtitle</div>
-						<input type="text" class="info_input">
+						<input type="text" class="info_input projectSubtitle">
 						<div class="subtitle noselect">post</div>
 						<textarea class="info_inputarea"></textarea>
+						<div class="subtitle noselect">URL</div>
+						<input type="text" class="info_input projectUrl">
 					</div>
-				</div>
-				<div class="project_submit">UPLOAD</div>
+					</div>
+				<div class="project_submit" v-on:click="Project_upload">UPLOAD</div>
 			</div>
 			<div class="upload_wrap">
 				<div class="title noselect">AWARDS</div>
@@ -50,10 +52,13 @@
 							<div class="award_title">{{ award.name }}</div>
 							<div class="award_date">{{ award.date }}</div>
 							<i class="fas fa-eraser award_delete" v-on:click="Award_delete($event)"></i>
-							<i class="fas fa-edit award_edit" v-on:click="Award_edit($event)"></i>
 						</div>
 					</transition-group>
 				</div>
+			</div>
+			<div class="footer">
+				<p>© 2020. <span class="NB">NB</span> ALL RIGHTS RESERVED.</p>
+				<p>This Website Designed by <span class="NB">NB</span>.</p>
 			</div>
 		</div>
 	</transition>
@@ -69,7 +74,8 @@
 				// Full_Black, Full_White, Short_Black, Short_White
 				Plus_Award: false,
 				logo: [false, false],
-				awards: []
+				awards: [],
+				imgFile: ''
 			};
 		},
 		created() {
@@ -125,7 +131,7 @@
 				axios.get('http://localhost:3000/awards').then((response)=>{
   					if (response.status === 200)
         				for (let award in response.data)
-        					this.awards.push(response.data[award]);
+        					this.awards.unshift(response.data[award]);
     			});
 			},
 			Admin_out: () => {
@@ -133,6 +139,7 @@
 			},
 			Plus_award: function() {
 				this.Plus_Award = true;
+				document.querySelector("#award_plus_name").focus();
 			},
 			// transition done 훅
 			award_enter: (el, done) => {
@@ -144,7 +151,7 @@
 				document.querySelector("#award_plus_date").value="";
 				this.Plus_Award = false;
 			},
-			Award_write_submit: () => {
+			Award_write_submit: function() {
 				let award_name = document.querySelector("#award_plus_name").value;
 				let award_date = document.querySelector("#award_plus_date").value;
 				if (award_name == "") {
@@ -153,29 +160,122 @@
 				} else if (award_date == "") {
 					document.querySelector("#award_plus_date").focus();
 					return;
+				} else {
+					let sendData = {};
+					sendData['name'] = award_name;
+					sendData['date'] = award_date;
+					let data_len = this.awards.length + 1;
+					axios.post('http://localhost:3000/awards/upload', sendData, {
+						headers: {'Content-Type': 'multipart/form-data'}
+					})
+					.then((response)=>{
+						if (response.status === 200) {
+							if (response.data == "success") {
+								sendData['award_id'] = data_len;
+								this.awards.unshift(sendData);
+								document.querySelector("#award_plus_name").value="";
+								document.querySelector("#award_plus_date").value="";
+								this.Plus_Award = false;
+							}
+						}
+					});
 				}
 			},
-			Award_edit: function(e) {
-				
-			},
 			Award_delete: function(e) {
+				let result = confirm("Really Delete?");
+				if(!result) return;
 				let sendData = {};
 				let award_name = e.target.parentElement.querySelector('.award_title').innerText
 				sendData['name'] = award_name;
-				axios.post('http://localhost:3000/awards/delete', sendData).then((response)=>{
+				e.target.parentElement.querySelector('.award_delete').remove();
+				axios.post('http://localhost:3000/awards/delete', sendData)
+				.then((response)=>{
   					if (response.status === 200) {
   						if (response.data == "success")
 	  						this.awards.splice(this.awards.findIndex(e => e.name === award_name), 1);
-	  					else // (response.data == "fail")
-	  						console.log("2");
   					}
         		});
+			},
+			Project_upload: function(e) {
+				let title = e.target.parentElement.querySelector('.info_wrap').querySelector('.projectTitle').value;
+				let subtitle = e.target.parentElement.querySelector('.info_wrap').querySelector('.projectSubtitle').value;
+				let post = e.target.parentElement.querySelector('.info_wrap').querySelector('textarea').value;
+				let url = e.target.parentElement.querySelector('.info_wrap').querySelector('.projectUrl').value;
+				let image = document.querySelector('#img_file').files;
+				if (title == "") {
+					e.target.parentElement.querySelector('.info_wrap').querySelector('.projectTitle').focus();
+					return;
+				} else if (subtitle == "") {
+					e.target.parentElement.querySelector('.info_wrap').querySelector('.projectSubtitle').focus();
+					return;
+				} else if (post == "") {
+					e.target.parentElement.querySelector('.info_wrap').querySelector('textarea').focus();
+					return;
+				} else if (image.length == 0) {
+					return;
+				}
+				this.imgFile = image[0];
+				let sendData = new FormData();
+				sendData.append('title', title);
+				sendData.append('subtitle', subtitle);
+				sendData.append('post', post);
+				sendData.append('img', image[0]);
+				if (url != "") sendData.append('url', url);
+				axios.post('http://localhost:3000/projects/upload', sendData, {
+					headers: {
+						'Content-Type': 'multipart/form-data'
+					}})
+				.then((response)=>{
+  					if (response.status === 200) {
+  						if (response.data == "success"){
+	  						alert("Upload Successful!");
+	  						document.querySelector('#preview').src = "/dist/picture.jpg";
+	  						document.querySelector('#img_file').value = "";
+	  						e.target.parentElement.querySelector('.info_wrap').querySelector('.projectTitle').value = "";
+	  						e.target.parentElement.querySelector('.info_wrap').querySelector('.projectSubtitle').value = "";
+	  						e.target.parentElement.querySelector('.info_wrap').querySelector('textarea').value = "";
+	  						e.target.parentElement.querySelector('.info_wrap').querySelector('.projectUrl').value = "";
+  						}
+	  					else if (response.data_len == "no img")
+	  						alert("Upload Image Please.");
+  					} else {
+  						alert("Upload Failed.");
+  					}
+        		});
+			},
+			Project_delete: function(e) {
+
+			},
+			Project_edit: function(e) {
+
 			}
 		}
 	}
 </script>
 
 <style scoped lang="scss">
+	.NB {
+		color: #adadad;
+	}
+	.footer {
+		background-color: #dbdbdb;
+		float: left;
+		width: 100%;
+		height: auto;
+		box-sizing: border-box;
+		padding: 100px 0;
+		text-align: center;
+		font-size: 1em;
+		line-height: 2;
+		font-weight: bold;
+		text-transform: uppercase;
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-selecti: none;
+	}
 	.award_input_name {
 		font-weight: bold;
 		position: relative;
@@ -406,6 +506,7 @@
 		transition: .2s ease-in-out;
 		resize: none;
 		margin-top: 10px !important;
+		margin-bottom: 20px !important;
 		&:focus {
 			border: 2px solid #bd0606
 		}
@@ -430,17 +531,13 @@
 		width: 100%;
 		max-width: 500px;
 		height: 100%;
-		&:after {
-			content: '';
-			display: block;
-			padding-bottom: 100%;
-		}
 	}
 	.picture_wrap {
 		float: left;
 		width: 50%;
 		max-width: 500px;
 		height: 100%;
+		max-height: 400px;
 		padding-right: 100px;
 		box-sizing: border-box;
 	}
@@ -448,7 +545,7 @@
 		position: relative;
 		float: left;
 		width: 100%;
-		height: 500px;
+		height: 650px;
 		padding: 50px 0;
 		box-sizing: border-box;
 	}
@@ -464,6 +561,7 @@
 		.picture_wrap {
 			width: 100%;
 			padding-right: 0;
+			margin-bottom: 100px;
 		}
 		.project_wrap {
 			padding: 0 0 0 0;
@@ -479,6 +577,11 @@
 		}
 		.info_inputarea {
 			width: 100%;
+		}
+		.picture {
+			float: left;
+			height: 100%;
+
 		}
 	}
 	.title {

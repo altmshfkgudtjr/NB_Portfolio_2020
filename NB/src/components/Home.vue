@@ -83,9 +83,9 @@
 			<div id="home_fourth" class="home">
 				<div id="project_box" class="project_box">
 					<div class="box_title">PORTFOLIO & EXPERIENCE</div>
-					<div class="project_item" data-aos="zoom-in" data-aos-duration="1000" v-for="project in projects" :key="projects.post_id">
+					<div class="project_item" data-aos="zoom-in" data-aos-duration="1000" v-for="project in projects" :key="projects.post_id" v-on:click="View_Post($event)" v-bind:name="project.post_id">
 						<div class="project_img_box">
-							<div class="project_img"></div>
+							<img class="project_img" :src="project.img">
 						</div>
 						<div class="project_title">{{ project.title }}</div>
 						<div class="project_subtitle">{{ project.subtitle }}</div>
@@ -109,29 +109,29 @@
 			<div id="home_sixth" class="home">
 				<div class="contact_title noselect">CONTACT ME
 				</div><div class="contact_info">
-					<div class="contact_info_wrap noselect" v-on:click="Go_Home">
+					<div class="contact_info_wrap noselect">
 						<i class="fas fa-map-marker-alt"></i>
-						<div class="contact_info_item">Gwangjin-gu, Seoul</div>
+						<div class="contact_info_item" v-on:click="Go_Home">Gwangjin-gu, Seoul</div>
 					</div>
-					<div class="contact_info_wrap" v-on:click="Go_College">
+					<div class="contact_info_wrap">
 						<i class="fas fa-university"></i>
-						<div class="contact_info_item">Sejong University</div>
+						<div class="contact_info_item" v-on:click="Go_College">Sejong University</div>
 					</div>
-					<div class="contact_info_wrap"  v-on:click="Go_email">
+					<div class="contact_info_wrap">
 						<i class="far fa-envelope"></i>
-						<div class="contact_info_item">altmshfkgudtjr@naver.com</div>
+						<div class="contact_info_item" v-on:click="Go_email">altmshfkgudtjr@naver.com</div>
 					</div>
-					<div class="contact_info_wrap" v-on:click="Go_git">
+					<div class="contact_info_wrap">
 						<i class="fab fa-github"></i>
-						<div class="contact_info_item">Github</div>
+						<div class="contact_info_item" v-on:click="Go_git">Github</div>
 					</div>
-					<div class="contact_info_wrap" v-on:click="Go_blog">
+					<div class="contact_info_wrap">
 						<i class="far fa-keyboard"></i>
-						<div class="contact_info_item">Blog</div>
+						<div class="contact_info_item" v-on:click="Go_blog">Blog</div>
 					</div>
-					<div class="contact_info_wrap" v-on:click="Go_instagram">
+					<div class="contact_info_wrap">
 						<i class="fab fa-instagram"></i>
-						<div class="contact_info_item">Instagram</div>
+						<div class="contact_info_item" v-on:click="Go_instagram">Instagram</div>
 					</div>
 				</div>
 				<div class="copyright">
@@ -223,19 +223,30 @@
 				axios.get('http://localhost:3000/awards').then((response)=>{
   					if (response.status === 200)
         				for (let award in response.data)
-        					this.awards.push(response.data[award]);
+        					this.awards.unshift(response.data[award]);
     			});
 			},
 			Get_projects: function() {
 				let pj_len = document.getElementsByClassName("project_item").length;
 				axios.get('http://localhost:3000/projects/'+pj_len).then((response)=>{
   					if (response.status === 200)
-        				for (let project in response.data)
-        					this.projects.push(response.data[project]);
+        				for (let project in response.data){
+        					response.data[project]['img'] = '/uploads/'+response.data[project]['img'];
+        					this.projects.unshift(response.data[project]);
+        				}
     			});
 			},
 			Go_Login: ()=> {
 				eventBus.$emit('GoLogin');
+			},
+			View_Post: function(e) {
+				let targetNum = e.target.getAttribute('name');
+				if (targetNum == null)
+					targetNum = e.target.parentElement.getAttribute('name');
+				if (targetNum == null)
+					targetNum = e.target.parentElement.parentElement.getAttribute('name');
+				document.querySelector('body').style.overflow = "hidden";
+				eventBus.$emit('PostOn', targetNum);
 			}
 		}
 	};

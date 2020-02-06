@@ -36,7 +36,7 @@ router.get('/', function(req, res){
 // 3개씩 호출 (num == 현재 보여진 프로젝트 개수)
 router.get('/:num', function (req, res, next) {
   let num = parseInt(req.params.num, 10);
-  connection.query('SELECT * from projects LIMIT '+num+', 3', function(err, rows) {
+  connection.query('SELECT * from projects ORDER BY post_id DESC LIMIT '+num+', 3', function(err, rows) {
     if(err) throw err;
     res.send(rows);
   });

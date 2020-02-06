@@ -232,7 +232,7 @@
   					if (response.status === 200)
         				for (let project in response.data){
         					response.data[project]['img'] = '/uploads/'+response.data[project]['img'];
-        					this.projects.unshift(response.data[project]);
+        					this.projects.push(response.data[project]);
         				}
     			});
 			},

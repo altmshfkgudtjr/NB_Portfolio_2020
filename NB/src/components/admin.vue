@@ -218,9 +218,7 @@
 					sendData['name'] = award_name;
 					sendData['date'] = award_date;
 					let data_len = this.awards.length + 1;
-					axios.post('http://localhost:3000/awards/upload', sendData, {
-						headers: {'Content-Type': 'multipart/form-data'}
-					})
+					axios.post('http://localhost:3000/awards/upload', sendData)
 					.then((response)=>{
 						if (response.status === 200) {
 							if (response.data == "success") {

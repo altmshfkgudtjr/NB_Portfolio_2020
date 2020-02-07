@@ -21,7 +21,9 @@ var storage = multer.diskStorage({
 		 		+ timestamp.getDate().toString()
 		 		+ file.originalname;
 		callback(null, timestamp);
-	}
+	},
+	// 파일 제한크기
+	limits: { fileSize: 10 * 1024 * 1024 }
 });
 var upload = multer({storage: storage});
 

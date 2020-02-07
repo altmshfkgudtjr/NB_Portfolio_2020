@@ -23,6 +23,7 @@ router.post('/delete', function(req, res) {
 router.post('/upload', function(req, res) {
 	let award_name = req.body.name;
 	let award_date = req.body.date;
+	console.log(req.body);
 	connection.query('INSERT INTO awards (name, date) VALUES ("'+award_name+'", "'+award_date+'")', function(err, rows) {
 		if(err) throw err;
 		res.send('success');

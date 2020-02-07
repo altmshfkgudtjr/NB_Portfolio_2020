@@ -2,8 +2,8 @@
 	<div class="login_modal">
 		<div class="login_box">
 			<div class="title noselect">LOGIN</div>
-			<input id="uid" type="text" class="login_input" placeholder="ID">
-			<input id="upw" type="password" class="login_input" placeholder="PW">
+			<input id="uid" type="text" class="login_input" placeholder="ID" v-on:keyup.13="Go_Login">
+			<input id="upw" type="password" class="login_input" placeholder="PW" v-on:keyup.13="Go_Login">
 		</div>
 		<div class="login_btns">
 			<div class="login_btn" v-on:click="Go_Login">Sign Up</div>
@@ -24,6 +24,7 @@
 			}
 		},
 		methods: {
+			// v-on:keyup.13="Go_Login" 와 같이 Key에 관한 binding을 할 수 있다.
 			Go_Login: () => {
 				let sendData = {};
 				sendData['uid'] = document.getElementById('uid').value;
@@ -49,10 +50,10 @@
 				eventBus.$emit("ByeLogin");
 			}
 		},
-		mounted() {
-			setTimeout(function() {
-				document.getElementById('uid').focus();
-			}, 300);
+		created() {
+			eventBus.$on("GoLogin", () => {
+				setTimeout(function() {document.querySelector('#uid').focus();}, 500);
+			})
 		}
 	}
 </script>

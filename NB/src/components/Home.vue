@@ -45,7 +45,7 @@
 						<div class="skill_item"><i class="far fa-check-square"></i>
 							Web Crawling in Python & R</div>
 						<div class="skill_item"><i class="far fa-check-square"></i>
-							Android in Kotlin</div>
+							Android application in Kotlin</div>
 						<div class="skill_item"><i class="far fa-check-square"></i>
 							More Application in C++, Python, Java, etc</div>
 					</div>
@@ -65,7 +65,7 @@
 						<div class="skill_category"><i class="fas fa-code-branch"></i>
 							BACK-END</div>
 						<div class="skill_item"><i class="far fa-check-square"></i>
-							Flask, Node.js</div>
+							Flask, Express</div>
 						<div class="skill_item"><i class="far fa-check-square"></i>
 							Wsgi, NginX</div>
 					</div>

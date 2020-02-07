@@ -42,6 +42,7 @@ router.get('/:num', function (req, res, next) {
   });
 });
 
+// project 삭제
 router.post('/delete/:num', function(req, res) {
 	let post_id = parseInt(req.params.num, 10);
 	connection.query('DELETE FROM projects WHERE post_id = "'+post_id+'"', function(err, rows) {
@@ -52,9 +53,9 @@ router.post('/delete/:num', function(req, res) {
 
 // 여기서 img 란 프론트 상에서 FormData의 key값과 맞춰준다.
 router.post('/upload', upload.single('img'), function(req, res) {
+	console.log("POST UPLOAD");
 	console.log(req.file);
 	console.log(req.body);
-	
 	let project_title = req.body.title;
 	let project_subtitle = req.body.subtitle;
 	let project_post = req.body.post;
@@ -71,13 +72,13 @@ router.post('/upload', upload.single('img'), function(req, res) {
 		 		+ (project_img.getMonth() + 1).toString()
 		 		+ project_img.getDate().toString()
 		 		+ req.file.originalname;
-	console.log(project_title, project_subtitle, project_post, project_url, project_img);
 	connection.query('INSERT INTO projects (title, subtitle, post, url, img) VALUES ("'+project_title+'", "'+project_subtitle+'", "'+project_post+'", "'+project_url+'", "'+project_img+'")', function(err, rows) {
 		if(err) throw err;
 		res.send('success');
 	});
 });
 
+// project 단일 호출 
 router.get('/view/:num', function(req, res, next) {
 	let num = parseInt(req.params.num, 10);
 	connection.query('SELECT * from projects WHERE post_id LIKE '+num, function(err, rows) {
@@ -87,6 +88,45 @@ router.get('/view/:num', function(req, res, next) {
 			"data": rows
 		});
 	});
+});
+
+// project 업데이트
+router.post('/update', upload.single('img'), function(req, res) {
+	console.log("POST UPDATE");
+	console.log(req.file);
+	console.log(req.body);
+	let project_target = req.body.target;
+	let project_title = req.body.title;
+	let project_subtitle = req.body.subtitle;
+	let project_post = req.body.post;
+	let project_url = req.body.url;
+	let project_img = new Date();
+	if (req.file) {	// 파일을 업데이트한 경우
+		project_img = project_img.getFullYear().toString()
+		 			+ (project_img.getMonth() + 1).toString()
+		 			+ project_img.getDate().toString()
+		 			+ req.file.originalname;
+		connection.query('UPDATE projects SET\
+		 title="'+project_title+'",\
+		 subtitle="'+project_subtitle+'",\
+		 post="'+project_post+'",\
+		 url="'+project_url+'",\
+		 img="'+project_img+'"\
+		  WHERE post_id='+project_target, function(err, rows) {
+			if (err) throw err;
+			res.send('success');
+		});
+	} else {		// 파일을 업데이트 하지 않은 경우
+		connection.query('UPDATE projects SET\
+		 title="'+project_title+'",\
+		 subtitle="'+project_subtitle+'",\
+		 post="'+project_post+'",\
+		 url="'+project_url+'"\
+		  WHERE post_id='+project_target, function(err, rows) {
+			if (err) throw err;
+			res.send('success');
+		});
+	}
 });
 
 module.exports = router;

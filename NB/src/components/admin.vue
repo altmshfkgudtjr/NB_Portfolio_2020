@@ -54,8 +54,8 @@
 					</div>
 					<transition name="top" v-on:enter="award_enter">
 						<div class="award" v-show="Plus_Award">
-							<input id="award_plus_name" type="text" class="award_input_name" placeholder="Award's Name">
-							<input id="award_plus_date" type="text" class="award_input_date" placeholder="Jenuary, 01 2020">
+							<input id="award_plus_name" type="text" class="award_input_name" placeholder="Award's Name" v-on:keyup.13="Award_write_submit">
+							<input id="award_plus_date" type="text" class="award_input_date" placeholder="Jenuary, 01 2020" v-on:keyup.13="Award_write_submit">
 							<i class="fas fa-times-circle award_delete" v-on:click="Award_write_cancel"></i>
 							<i class="fas fa-check-circle award_submit" v-on:click="Award_write_submit"></i>
 						</div>
@@ -305,7 +305,50 @@
         		});
 			},
 			Project_edit: function(e) {
-
+				let targetNum = document.querySelector('#info_form').getAttribute('name');
+				let title = document.querySelector('#info_form').querySelector('.projectTitle').value;
+			  	let subtitle = document.querySelector('#info_form').querySelector('.projectSubtitle').value;
+			  	let post = document.querySelector('#info_form').querySelector('textarea').value;
+			  	let url = document.querySelector('#info_form').querySelector('.projectUrl').value;
+			  	let image = document.querySelector('#img_file').files;
+			  	let sendData = new FormData();
+			  	sendData.append('target', targetNum);
+				sendData.append('title', title);
+				sendData.append('subtitle', subtitle);
+				sendData.append('post', post);
+				if (image.length != 0) {
+					this.imgFile = image[0];
+					sendData.append('img', image[0]);
+				}
+				if (url != "") sendData.append('url', url);
+				axios.post('http://localhost:3000/projects/update', sendData, {
+					headers: {
+						'Content-Type': 'multipart/form-data'
+					}})
+				.then((response)=>{
+  					if (response.status === 200) {
+  						if (response.data == "success"){
+	  						alert("Update Successful!");
+	  						document.querySelector('#preview').src = "/dist/picture.jpg";
+	  						document.querySelector('#img_file').value = "";
+	  						e.target.parentElement.querySelector('.info_wrap').querySelector('.projectTitle').value = "";
+	  						e.target.parentElement.querySelector('.info_wrap').querySelector('.projectSubtitle').value = "";
+	  						e.target.parentElement.querySelector('.info_wrap').querySelector('textarea').value = "";
+	  						e.target.parentElement.querySelector('.info_wrap').querySelector('.projectUrl').value = "";
+	  						this.projects = [];
+	  						axios.get('http://localhost:3000/projects').then((response)=>{
+			  					if (response.status === 200)
+			        				for (let project_num in response.data){
+			        					response.data[project_num]['img'] = '/uploads/'+response.data[project_num]['img']
+			        					this.projects.unshift(response.data[project_num]);
+			        				}
+			        				this.post_edit = false;
+			    			});
+  						}
+  					} else {
+  						alert("Update Failed.");
+  					}
+        		});
 			},
 			Project_delete: function(e) {
 				let result = confirm("Really Delete?");

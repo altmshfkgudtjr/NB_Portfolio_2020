@@ -42,9 +42,9 @@ router.get('/:num', function (req, res, next) {
   });
 });
 
-router.post('/delete', function(req, res) {
-	let project_title = req.body.title;
-	connection.query('DELETE FROM projects WHERE name = "'+award_name+'"', function(err, rows) {
+router.post('/delete/:num', function(req, res) {
+	let post_id = parseInt(req.params.num, 10);
+	connection.query('DELETE FROM projects WHERE post_id = "'+post_id+'"', function(err, rows) {
 		if(err) throw err;
 		res.send('success');
 	});

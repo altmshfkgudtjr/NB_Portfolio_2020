@@ -16,10 +16,20 @@
 			</div>
 			<div class="upload_wrap">
 				<div class="title noselect">PORTFOLIO & EXPERIENCE</div>
+				<div id="projects_box" class="projects_box">
+					<transition-group name="projectList" tag="div">
+						<div class="project_pick noselect" v-for="project in projects" :key="project.post_id" v-on:click="Project_pick" :name="project.post_id">
+							<img class="project_pick_img" :src="project.img">
+							<div class="project_pick_title">
+								{{ project.title }}
+							</div>
+						</div>
+				</transition-group>
+				</div>
 				<div class="project_wrap">
 					<div class="picture_wrap">
 						<img id="preview" src="../assets/images/picture.jpg" class="picture">
-					</div><div class="info_wrap">
+					</div><div id="info_form" class="info_wrap">
 						<input id="img_file" type="file" accept="img/*" required class="img_file">
 						<div class="subtitle noselect">title</div>
 						<input type="text" class="info_input projectTitle">
@@ -31,7 +41,10 @@
 						<input type="text" class="info_input projectUrl">
 					</div>
 					</div>
-				<div class="project_submit" v-on:click="Project_upload">UPLOAD</div>
+				<div class="project_submit" v-on:click="Project_upload" v-show="!post_edit">UPLOAD</div>
+				<div class="project_submit " v-on:click="Project_edit" v-show="post_edit">EDIT</div>
+				<div class="project_submit project_submit_delete" v-on:click="Project_delete" v-show="post_edit">DELETE</div>
+				<div class="project_submit" v-on:click="Project_cancel" v-show="post_edit">CANCEL</div>
 			</div>
 			<div class="upload_wrap">
 				<div class="title noselect">AWARDS</div>
@@ -75,7 +88,9 @@
 				Plus_Award: false,
 				logo: [false, false],
 				awards: [],
-				imgFile: ''
+				imgFile: '',
+				projects: [],
+				post_edit: false
 			};
 		},
 		created() {
@@ -124,9 +139,47 @@
 					reader.readAsDataURL(get_file[0]);
 				}
     		});
+
+    		const slider = document.querySelector('#projects_box');
+			let isDown = false;
+			let startX;
+			let scrollLeft;
+
+			slider.addEventListener('mousedown', (e) => {
+			  isDown = true;
+			  slider.classList.add('active');
+			  startX = e.pageX - slider.offsetLeft;
+			  scrollLeft = slider.scrollLeft;
+			});
+			slider.addEventListener('mouseleave', () => {
+			  isDown = false;
+			  slider.classList.remove('active');
+			});
+			slider.addEventListener('mouseup', () => {
+			  isDown = false;
+			  slider.classList.remove('active');
+			});
+			slider.addEventListener('mousemove', (e) => {
+			  if(!isDown) return;
+			  e.preventDefault();
+			  const x = e.pageX - slider.offsetLeft;
+			  const walk = (x - startX) * 3; //scroll-fast
+			  slider.scrollLeft = scrollLeft - walk;
+			});
+
+    		this.Get_projects();
     		this.Get_awards();
 		},
 		methods: {
+			Get_projects: function() {
+				axios.get('http://localhost:3000/projects').then((response)=>{
+  					if (response.status === 200)
+        				for (let project_num in response.data){
+        					response.data[project_num]['img'] = '/uploads/'+response.data[project_num]['img']
+        					this.projects.unshift(response.data[project_num]);
+        				}
+    			});
+			},
 			Get_awards: function() {
 				axios.get('http://localhost:3000/awards').then((response)=>{
   					if (response.status === 200)
@@ -235,6 +288,14 @@
 	  						e.target.parentElement.querySelector('.info_wrap').querySelector('.projectSubtitle').value = "";
 	  						e.target.parentElement.querySelector('.info_wrap').querySelector('textarea').value = "";
 	  						e.target.parentElement.querySelector('.info_wrap').querySelector('.projectUrl').value = "";
+	  						this.projects = [];
+	  						axios.get('http://localhost:3000/projects').then((response)=>{
+			  					if (response.status === 200)
+			        				for (let project_num in response.data){
+			        					response.data[project_num]['img'] = '/uploads/'+response.data[project_num]['img']
+			        					this.projects.unshift(response.data[project_num]);
+			        				}
+			    			});
   						}
 	  					else if (response.data_len == "no img")
 	  						alert("Upload Image Please.");
@@ -243,17 +304,143 @@
   					}
         		});
 			},
-			Project_delete: function(e) {
-
-			},
 			Project_edit: function(e) {
 
+			},
+			Project_delete: function(e) {
+				let result = confirm("Really Delete?");
+				if(!result) return;
+				let targetNum = document.querySelector('#info_form').getAttribute('name');
+				axios.post('http://localhost:3000/projects/delete/'+targetNum).then((response)=> {
+					if (response.status === 200)
+						if (response.data == "success"){
+							this.projects.splice(this.projects.findIndex(e => e.post_id == targetNum), 1);
+							document.querySelector('#preview').src = "/dist/picture.jpg";
+							document.querySelector('#img_file').value = "";
+							document.querySelector('#info_form').querySelector('.projectTitle').value = "";
+			  				document.querySelector('#info_form').querySelector('.projectSubtitle').value = "";
+			  				document.querySelector('#info_form').querySelector('textarea').value = "";
+			  				document.querySelector('#info_form').querySelector('.projectUrl').value = "";
+			  				this.post_edit = false;
+						}
+						else alert("Server Error");
+				});
+			},
+			Project_cancel: function(e) {
+				document.querySelector('#preview').src = "/dist/picture.jpg";
+				document.querySelector('#img_file').value = "";
+				document.querySelector('#info_form').querySelector('.projectTitle').value = "";
+  				document.querySelector('#info_form').querySelector('.projectSubtitle').value = "";
+  				document.querySelector('#info_form').querySelector('textarea').value = "";
+  				document.querySelector('#info_form').querySelector('.projectUrl').value = "";
+  				this.post_edit = false;
+			},
+			Project_pick: function(e) {
+				let targetNum = e.target.getAttribute('name');
+				if (targetNum == undefined)
+					targetNum = e.target.parentElement.getAttribute('name');
+				axios.get('http://localhost:3000/projects/view/'+targetNum).then((response)=>{
+  					if (response.status === 200)
+  						if (response.data['result'] == "success") {
+  							let data = response.data['data'][0];
+  							document.querySelector('#info_form').setAttribute('name', data['post_id']);
+  							document.querySelector('#preview').src = "/uploads/"+data['img'];
+  							document.querySelector('#info_form').querySelector('.projectTitle').value = data['title'];
+  							document.querySelector('#info_form').querySelector('.projectSubtitle').value = data['subtitle'];
+  							document.querySelector('#info_form').querySelector('textarea').value = data['post'];
+  							document.querySelector('#info_form').querySelector('.projectUrl').value = data['url'];
+  							this.post_edit = true;
+  						} else {
+  							alert("Server Error");
+  						}
+    			});
 			}
 		}
 	}
 </script>
 
 <style scoped lang="scss">
+	.project_pick_title {
+		position: relative;
+		width: 250px;
+		height: 50px;
+		font-size: 16px;
+		font-weight: bold;
+		color: silver;
+		overflow: hidden;
+		text-overflow:ellipsis;
+		white-space:nowrap;
+		transition: .2s ease-in-out;
+	}
+	.project_pick_img {
+		position: relative;
+		width: 250px;
+		height: 250px;
+		background-image: url("../assets/images/picture.jpg");
+		background-size: cover;
+		background-position: center;
+		transition: .2s cubic-bezier(0.43, -0.39, 0.5, 1.09);
+	}
+	.project_pick {
+		position: relative;
+		display: inline-block;
+		width: 250px;
+		height: 300px;
+		box-sizing: content-box;
+		padding: 10px;
+		cursor: pointer;
+		margin-left: 50px;
+		&:hover > .project_pick_title {
+			color: black;
+		}
+		&:hover > .project_pick_img {
+			filter: drop-shadow(8px 8px 10px gray);
+		}
+		&:first-child {
+			margin-left: 0;
+		}
+	}
+	.projects_box {
+		float: left;
+		width: 100%;
+		height: 300px;
+		padding-bottom: 20px;
+		border-bottom: 2px solid #cbcbcb;
+		box-sizing: content-box;
+		overflow-y: hidden;
+		overflow-x: scroll;
+		white-space: nowrap;
+		will-change: transform;
+		user-select: none;
+		&::-webkit-scrollbar {
+		    display: none;
+		}
+	}
+	.active {
+		cursor: grabbing !important;
+		cursor: -webkit-grabbing !important;
+		transform: scale(1);
+	}
+	@media screen and (max-width: 500px) {
+		.project_pick_title {
+			width: 100%;
+			height: auto;
+		}
+		.projects_box {
+			height: 200px;
+			padding-bottom: 0;
+			margin-bottom: 30px;
+		}
+		.project_pick {
+			width: 150px;
+			height: 150px;
+			margin-left: 20px;
+		}
+		.project_pick_img {
+			width: 150px;
+			height: 150px;
+		}
+	}
 	.NB {
 		color: #adadad;
 	}
@@ -459,6 +646,7 @@
 		float: left;
 		margin-top: 30px;
 		margin-left: auto;
+		margin-right: 20px;
 		width: 240px;
 		height: 30px;
 		border: 2px solid black;
@@ -471,6 +659,13 @@
 		&:hover {
 			background-color: black;
 			color: white;
+		}
+		&_delete {
+			border: 2px solid #bd0606;
+			color: #bd0606;
+			&:hover {
+				background-color: #bd0606;
+			}
 		}
 	}
 	@media screen and (max-width: 500px) {
@@ -646,5 +841,12 @@
 	.awardList-enter, .awardList-leave-to {
 		opacity: 0;
 		margin-bottom: -40px;
+	}
+	.projectList-enter-active, .projectList-leave-active {
+		transition: all .8s;
+	}
+	.projectList-enter, .projectList-leave-to {
+		opacity: 0;
+		margin-left: -200px;
 	}
 </style>

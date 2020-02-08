@@ -8,7 +8,12 @@ var cors = require('cors');
 var mysql      = require('mysql');
 var dbconfig   = require('./database.js');
 var connection = mysql.createConnection(dbconfig);
+var http = require('http')
 
+// heroku sleep 방지
+setInterval(function() {
+	http.get('https://nb-log.herokuapp.com/');
+}, 1200000); // every 20 minutes
 
 // 라우터 연결
 var indexRouter = require('./routes/index');

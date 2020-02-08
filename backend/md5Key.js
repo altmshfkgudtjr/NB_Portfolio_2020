@@ -1,3 +1,3 @@
 module.exports = {
-	key : 'rodsaf!@fgj22142klfl1!@#!@lkfdv'
+	key : 'rodsaf!@fgj22142klfldf!@#!@lkfdv'
 };

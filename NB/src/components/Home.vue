@@ -147,6 +147,7 @@
 	import axios from 'axios'
 	import Vue from "vue"
 	import { eventBus } from "../App.vue"
+	import host from "./host.js"
 	var logo_black = true;
 	export default {
 		data() {
@@ -220,7 +221,7 @@
 				window.open('https://www.instagram.com/brother_rock999/', '_blank');
 			},
 			Get_awards: function() {
-				axios.get('http://localhost:3000/awards').then((response)=>{
+				axios.get('https://'+host['host']+'/awards').then((response)=>{
   					if (response.status === 200)
         				for (let award in response.data)
         					this.awards.unshift(response.data[award]);
@@ -228,7 +229,7 @@
 			},
 			Get_projects: function() {
 				let pj_len = document.getElementsByClassName("project_item").length;
-				axios.get('http://localhost:3000/projects/'+pj_len).then((response)=>{
+				axios.get('https://'+host['host']+'/projects/'+pj_len).then((response)=>{
   					if (response.status === 200)
         				for (let project in response.data){
         					response.data[project]['img'] = '/uploads/'+response.data[project]['img'];
@@ -304,6 +305,11 @@
 		font-size: 1vw;
 		letter-spacing: -0.2px;
 		line-height: 1.5;
+	}
+	@media screen and (max-width: 500px) {
+		.intro_top {
+			font-size: 3vw;
+		}
 	}
 	.intro_main {
 		position: absolute;

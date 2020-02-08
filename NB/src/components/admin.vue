@@ -80,6 +80,7 @@
 <script>
 	import axios from 'axios'
 	import { eventBus } from "../App.vue"
+	import host from "./host.js"
 	var smallDisplay = false;	// Now Screen Width Boolean
 	export default {
 		data() {
@@ -172,7 +173,7 @@
 		},
 		methods: {
 			Get_projects: function() {
-				axios.get('http://localhost:3000/projects').then((response)=>{
+				axios.get('https://'+host['host']+'/projects').then((response)=>{
   					if (response.status === 200)
         				for (let project_num in response.data){
         					response.data[project_num]['img'] = '/uploads/'+response.data[project_num]['img']
@@ -181,7 +182,7 @@
     			});
 			},
 			Get_awards: function() {
-				axios.get('http://localhost:3000/awards').then((response)=>{
+				axios.get('https://'+host['host']+'/awards').then((response)=>{
   					if (response.status === 200)
         				for (let award in response.data)
         					this.awards.unshift(response.data[award]);
@@ -218,7 +219,7 @@
 					sendData['name'] = award_name;
 					sendData['date'] = award_date;
 					let data_len = this.awards.length + 1;
-					axios.post('http://localhost:3000/awards/upload', sendData)
+					axios.post('https://'+host['host']+'/awards/upload', sendData)
 					.then((response)=>{
 						if (response.status === 200) {
 							if (response.data == "success") {
@@ -239,7 +240,7 @@
 				let award_name = e.target.parentElement.querySelector('.award_title').innerText
 				sendData['name'] = award_name;
 				e.target.parentElement.querySelector('.award_delete').remove();
-				axios.post('http://localhost:3000/awards/delete', sendData)
+				axios.post('https://'+host['host']+'/awards/delete', sendData)
 				.then((response)=>{
   					if (response.status === 200) {
   						if (response.data == "success")
@@ -272,7 +273,7 @@
 				sendData.append('post', post);
 				sendData.append('img', image[0]);
 				if (url != "") sendData.append('url', url);
-				axios.post('http://localhost:3000/projects/upload', sendData, {
+				axios.post('https://'+host['host']+'/projects/upload', sendData, {
 					headers: {
 						'Content-Type': 'multipart/form-data'
 					}})
@@ -287,7 +288,7 @@
 	  						e.target.parentElement.querySelector('.info_wrap').querySelector('textarea').value = "";
 	  						e.target.parentElement.querySelector('.info_wrap').querySelector('.projectUrl').value = "";
 	  						this.projects = [];
-	  						axios.get('http://localhost:3000/projects').then((response)=>{
+	  						axios.get('https://'+host['host']+'/projects').then((response)=>{
 			  					if (response.status === 200)
 			        				for (let project_num in response.data){
 			        					response.data[project_num]['img'] = '/uploads/'+response.data[project_num]['img']
@@ -319,7 +320,7 @@
 					sendData.append('img', image[0]);
 				}
 				if (url != "") sendData.append('url', url);
-				axios.post('http://localhost:3000/projects/update', sendData, {
+				axios.post('https://'+host['host']+'/projects/update', sendData, {
 					headers: {
 						'Content-Type': 'multipart/form-data'
 					}})
@@ -334,7 +335,7 @@
 	  						e.target.parentElement.querySelector('.info_wrap').querySelector('textarea').value = "";
 	  						e.target.parentElement.querySelector('.info_wrap').querySelector('.projectUrl').value = "";
 	  						this.projects = [];
-	  						axios.get('http://localhost:3000/projects').then((response)=>{
+	  						axios.get('https://'+host['host']+'/projects').then((response)=>{
 			  					if (response.status === 200)
 			        				for (let project_num in response.data){
 			        					response.data[project_num]['img'] = '/uploads/'+response.data[project_num]['img']
@@ -352,7 +353,7 @@
 				let result = confirm("Really Delete?");
 				if(!result) return;
 				let targetNum = document.querySelector('#info_form').getAttribute('name');
-				axios.post('http://localhost:3000/projects/delete/'+targetNum).then((response)=> {
+				axios.post('https://'+host['host']+'/projects/delete/'+targetNum).then((response)=> {
 					if (response.status === 200)
 						if (response.data == "success"){
 							this.projects.splice(this.projects.findIndex(e => e.post_id == targetNum), 1);
@@ -380,7 +381,7 @@
 				let targetNum = e.target.getAttribute('name');
 				if (targetNum == undefined)
 					targetNum = e.target.parentElement.getAttribute('name');
-				axios.get('http://localhost:3000/projects/view/'+targetNum).then((response)=>{
+				axios.get('https://'+host['host']+'/projects/view/'+targetNum).then((response)=>{
   					if (response.status === 200)
   						if (response.data['result'] == "success") {
   							let data = response.data['data'][0];

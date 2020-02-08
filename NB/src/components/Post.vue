@@ -25,6 +25,7 @@
 	import axios from 'axios'
 	import Vue from "vue"
 	import { eventBus } from "../App.vue"
+	import host from "./host.js"
 	export default {
 		data() {
 			return {
@@ -39,7 +40,7 @@
 		created() {
 			// 여기서는 또 function() 이 아닌 Arrow function을 사용해야 this 사용 가능
 			eventBus.$on("PostOn", (targetNum) => {
-				axios.get('http://localhost:3000/projects/view/'+targetNum).then((response)=>{
+				axios.get('https://'+host['host']+'/projects/view/'+targetNum).then((response)=>{
   					if (response.status === 200)
   						if (response.data['result'] == "success") {
   							let data = response.data['data'][0];
@@ -128,6 +129,13 @@
 		color: silver;
 		margin: auto;
 	}
+	@media screen and (max-width: 500px) {
+		.subtitle {
+			margin-top: 10px;
+			font-size: 14px;
+			line-height: 24px;
+		}
+	}
 	.title {
 		position: relative;
 		width: 100%;
@@ -179,6 +187,9 @@
 			&_btn {
 				margin-left: 0;
 			}
+		}
+		.post_image {
+			min-height: 200px;
 		}
 	}
 	.modal {

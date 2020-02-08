@@ -16,7 +16,7 @@
 	import axios from 'axios'
 	import Vue from "vue"
 	import { eventBus } from "../App.vue"
-
+	import host from "./host.js"
 	export default {
 		data() {
 			return {
@@ -37,7 +37,7 @@
 					document.getElementById('upw').focus();
 					return;
 				}
-				axios.post('http://localhost:3000/user', sendData).then((response)=>{
+				axios.post('https://'+host['host']+'/user', sendData).then((response)=>{
   					if (response.status === 200) {
   						if (response.data == "success")
 	  						eventBus.$emit("SuccessLogin");

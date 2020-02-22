@@ -5,6 +5,9 @@
 ## Build Setup
 
 ``` bash
+# Go Server
+cd server
+
 # install dependencies
 npm install
 

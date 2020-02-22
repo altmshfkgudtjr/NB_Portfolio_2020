@@ -4,9 +4,11 @@
 
 ## Build Setup
 
+#### Client-Side
+
 ``` bash
-# Go Server
-cd server
+# Go Client
+cd client
 
 # install dependencies
 npm install
@@ -16,5 +18,18 @@ npm run dev
 
 # build for production with minification
 npm run build
+```
+
+#### Server-Side
+
+```bash
+# Go Server
+cd server
+
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:80
+npm start
 ```
 

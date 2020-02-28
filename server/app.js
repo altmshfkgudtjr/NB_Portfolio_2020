@@ -15,7 +15,7 @@ setInterval(function() {
 	http.get('https://nb-log.herokuapp.com/');
 }, 1200000); // every 20 minutes
 
-// 라우터 연결
+// API 분리 연결
 var indexRouter = require('./routes/index');
 var projects = require('./routes/projects');
 var awards = require('./routes/awards');

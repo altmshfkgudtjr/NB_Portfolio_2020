@@ -1,6 +1,29 @@
 # NB
 
-> NB's Portpolio
+> NB's Portpolio Web Site
+
+![img](C:\Users\NB\Desktop\Portfolio_Vue\img.png)
+
+## About
+
+My Portfolio Web site remodeling using Vue.js and Node.js.
+
+
+
+## Stack
+
+#### Front-end
+
+- Vue.js
+- CSS Module + SCSS
+
+#### Server
+
+- Node.js
+- ClearDB(MySQL)
+- Heroku Web Hosting
+
+
 
 ## Build Setup
 
@@ -33,3 +56,8 @@ npm install
 npm start
 ```
 
+
+
+#### Questions
+
+Feel free to submit new issue when you have questions or find some bugs.

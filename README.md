@@ -2,7 +2,7 @@
 
 > NB's Portpolio Web Site
 
-![img](.\img.png)
+![img](./img.png)
 
 ## About
 

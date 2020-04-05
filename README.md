@@ -2,7 +2,7 @@
 
 > NB's Portpolio Web Site
 
-![img](C:\Users\NB\Desktop\Portfolio_Vue\img.png)
+![img](.\img.png)
 
 ## About
 

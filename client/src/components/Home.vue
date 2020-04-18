@@ -47,7 +47,7 @@
 						<div class="skill_item"><i class="far fa-check-square"></i>
 							Android application in Kotlin</div>
 						<div class="skill_item"><i class="far fa-check-square"></i>
-							More Application in C++, Python, Java, etc</div>
+							More Application in Python, Java, etc</div>
 					</div>
 					<div>
 						<div class="skill_category"><i class="fas fa-hashtag"></i>
@@ -57,7 +57,7 @@
 						<div class="skill_item"><i class="far fa-check-square"></i>
 							Javscript, Jquery</div>
 						<div class="skill_item"><i class="far fa-check-square"></i>
-							Bootstrap, Vue.JS</div>
+							Webpack, Vue.JS</div>
 						<div class="skill_item"><i class="far fa-check-square"></i>
 							Adobe(CS, XD)</div>
 					</div>
@@ -152,6 +152,7 @@
 	export default {
 		data() {
 			return {
+				loading_project: false,
 				showing: true,
 				awards: [],
 				projects: []
@@ -228,14 +229,19 @@
     			});
 			},
 			Get_projects: function() {
-				let pj_len = document.getElementsByClassName("project_item").length;
-				axios.get('https://'+host['host']+'/projects/'+pj_len).then((response)=>{
-  					if (response.status === 200)
-        				for (let project in response.data){
-        					response.data[project]['img'] = '/uploads/'+response.data[project]['img'];
-        					this.projects.push(response.data[project]);
-        				}
-    			});
+				if (!this.loading_project) {
+					this.loading_project = !this.loading_project;
+					let pj_len = document.getElementsByClassName("project_item").length;
+					axios.get('https://'+host['host']+'/projects/'+pj_len).then((response)=>{
+	  					if (response.status === 200) {
+	        				for (let project in response.data){
+	        					response.data[project]['img'] = '/uploads/'+response.data[project]['img'];
+	        					this.projects.push(response.data[project]);
+	        				}
+	        				this.loading_project = !this.loading_project;
+	        			}
+	    			});
+				}
 			},
 			Go_Login: ()=> {
 				eventBus.$emit('GoLogin');
